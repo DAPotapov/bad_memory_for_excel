@@ -37,17 +37,12 @@ def main():
                 if os.path.isfile(os.path.join(sheets_path, sheet)):                    
                     sheet_contents = ET.parse(os.path.join(sheets_path, sheet))
                     root = sheet_contents.getroot()
-                    tag = root.find(".//{*}sheetProtection") # Почему-то считывает таг как-то не так поэтому эту запись не может найти
+                    tag = root.find(".//{*}sheetProtection")
                     if tag != None:
                         print(tag.attrib)
-                    # for child in root:
-                    #     print(child.tag, child.attrib)
-                    # for tag in root.items():
-                    #     print(tag)
-                    # tag = root.iterfind('sheetPr')
-                    # if tag:
-                    #     for x in tag:
-                    #         print(x.items())
+                        root.remove(tag)
+                        sheet_contents.write(os.path.join(sheets_path, sheet))
+
 
 if __name__ == '__main__':
     main()
