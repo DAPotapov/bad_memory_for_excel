@@ -21,7 +21,11 @@ def main():
     if not zipfile.is_zipfile(sys.argv[1]):
         sys.exit("Provide MS Excel 2007 (or newer) file")
 
-    # with zipfile.ZipFile(sys)
+    print(sys.argv[1])
+    # with zipfile.ZipFile(sys.argv[1], "r") as file:
+
+    #     output_file = input_file.rsplit('.',1)[0] + '.csv'
+
 
 if __name__ == '__main__':
     main()
