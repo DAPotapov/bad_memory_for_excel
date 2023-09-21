@@ -1,2 +1,3 @@
 # bad_memory_for_excel
-Helps with forgeting passwords to protected sheets
+Helps when password to protected sheet had forgotten
+It is a training project for personal use. May not be used in any other way.
