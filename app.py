@@ -8,7 +8,6 @@ import zipfile
 
 def main():
 
-# TODO Add support for temp files and directories
     # Check for command-line usage
     if len(sys.argv) != 2:
         sys.exit("Usage: python app.py <file to process>")
