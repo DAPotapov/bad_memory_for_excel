@@ -38,7 +38,7 @@ def main():
                 if tag != None:
                     root.remove(tag)
                     sheet_contents.write(os.path.join(sheets_path, sheet))
-                    sheets_list.append(sheet)
+                    sheets_list.append(os.path.splitext(sheet)[0])
 
     if sheets_list:
         # Create new archive
@@ -56,7 +56,7 @@ def main():
                     # Relative file path to store in archive
                     relpath = os.path.join(os.path.relpath(folder_name, temp_folder), filename)
                     new_file.write(file_path, relpath)
-        print(f"New file created: '{new_filename}' and includes changed sheets: {','.join(sheets_list)}.")
+        print(f"New file created: '{new_filename}' and includes changed sheets: {', '.join(sheets_list)}.")
     else:
         print("No files changed.")
     
