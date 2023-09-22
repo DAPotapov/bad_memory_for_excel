@@ -1,18 +1,9 @@
 #!.venv/bin/python
 
-import logging
 import os
 import sys
 import xml.etree.ElementTree as ET
 import zipfile
-
-
-# Configure logging
-logging.basicConfig(filename=".data/logger.log", 
-                    filemode='a', 
-                    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s', 
-                    level=logging.INFO)
-logger = logging.getLogger(__name__)
 
 def main():
 
@@ -33,6 +24,7 @@ def main():
     with zipfile.ZipFile(sys.argv[1], "r") as file:
         file.extractall(path=temp_folder)
 
+    sheets_list = []
     # Get into extracted file-tree and proceed with sheet's files
     sheets_path = os.path.join(temp_folder, 'xl', 'worksheets')
     if os.path.exists(sheets_path):
@@ -46,24 +38,28 @@ def main():
                 if tag != None:
                     root.remove(tag)
                     sheet_contents.write(os.path.join(sheets_path, sheet))
+                    sheets_list.append(sheet)
 
-    # Create new archive
-    # TODO check if files were modified and inform user of made changes
-    new_filename = filename.rsplit(".",1)[0] + '_updated.' + extension
-    with zipfile.ZipFile(os.path.join(folder, new_filename), "w", compression=zipfile.ZIP_DEFLATED) as new_file:
-        
-        # Walk through subfolder and pack contents to archive relatively
-        for folder_name, subfolders, filenames in os.walk(temp_folder):
-            for filename in filenames:
-                # Path to file to pack
-                file_path = os.path.join(folder_name, filename)
-                # basename = os.path.basename(file_path)
-                
-                # Relative file path to store in archive
-                relpath = os.path.join(os.path.relpath(folder_name, temp_folder), filename)
-                # basename = os.path.join(relpath, filename)
-                new_file.write(file_path, relpath)
+    if sheets_list:
+        # Create new archive
+        # TODO check if files were modified and inform user of made changes
+        new_filename = filename.rsplit(".",1)[0] + '_updated.' + extension
+        with zipfile.ZipFile(os.path.join(folder, new_filename), "w", compression=zipfile.ZIP_DEFLATED) as new_file:
+            
+            # Walk through subfolder and pack contents to archive relatively
+            for folder_name, subfolders, filenames in os.walk(temp_folder):
+                for filename in filenames:
 
+                    # Path to file to pack
+                    file_path = os.path.join(folder_name, filename)
+
+                    # Relative file path to store in archive
+                    relpath = os.path.join(os.path.relpath(folder_name, temp_folder), filename)
+                    new_file.write(file_path, relpath)
+        print(f"New file created: '{new_filename}' and includes changed sheets: {','.join(sheets_list)}.")
+    else:
+        print("No files changed.")
+    
 
 if __name__ == '__main__':
     main()
